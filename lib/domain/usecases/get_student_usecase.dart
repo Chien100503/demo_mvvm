@@ -1,9 +1,9 @@
-import '../../data/repositories/student_repository.dart';
+import '../repositories/student_repository.dart';
 import '../entities/student.dart';
 
-class GetStudentUsercase {
+class GetStudentUsecase {
   final StudentRepository repository;
-  GetStudentUsercase({required this.repository});
+  GetStudentUsecase({required this.repository});
 
   Future<List<Student>> call() async {
     return repository.getAll();

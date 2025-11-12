@@ -1,14 +1,10 @@
-import 'dart:async';
-
-import 'package:demo_restful_api/core/network/api_services.dart';
-import 'package:demo_restful_api/data/repositories/student_repository.dart';
-import 'package:demo_restful_api/domain/entities/student.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-
+import '../../domain/repositories/student_repository.dart';
+import '../../domain/entities/student.dart';
+import 'package:demo_restful_api/core/network/api_services.dart';
 import '../../data/datasources/student_remote_datasource.dart';
 import '../../data/repositories/student_repository_impl.dart';
 import '../../data/services/student_api_service.dart';
-
 
 final apiServiceProvider = Provider(
   (ref) => ApiService(baseUrl: 'https://690b09d41a446bb9cc24f0d5.mockapi.io'),
@@ -24,6 +20,7 @@ final studentRepoProvider = Provider<StudentRepository>(
   (ref) =>
       StudentRepositoryImpl(remote: ref.read(studentRemoteDatasourceProvider)),
 );
+
 final studentListProvider =
     AsyncNotifierProvider<StudentListNotifierProvider, List<Student>>(
       () => StudentListNotifierProvider(),
@@ -49,7 +46,6 @@ class StudentListNotifierProvider extends AsyncNotifier<List<Student>> {
       return [...currentList, newStudent];
     });
   }
-
   Future<void> updateStudent(Student student) async {
     state = await AsyncValue.guard(() async {
       final updatedStudent = await repo.update(student);

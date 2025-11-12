@@ -9,6 +9,7 @@ class StudentModel extends Student {
     required super.major,
   });
 
+
   factory StudentModel.fromJson(Map<String, dynamic> json) {
     return StudentModel(
       id: json['id'] as String,
@@ -19,11 +20,12 @@ class StudentModel extends Student {
     );
   }
 
+  /// toJson để làm việc với API
   Map<String, dynamic> toJson() => {
-        'id': id,
-        'fullName': fullName,
-        'age': age,
-        'address': address,
-        'major': major,
-      };
+    'id': id,
+    'fullName': fullName,
+    'age': age,
+    'address': address,
+    'major': major,
+  };
 }

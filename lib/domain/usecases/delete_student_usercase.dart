@@ -1,4 +1,4 @@
-import '../../data/repositories/student_repository.dart';
+import '../repositories/student_repository.dart';
 
 class DeleteStudentUsercase {
   final StudentRepository repository;

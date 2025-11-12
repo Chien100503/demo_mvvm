@@ -2,8 +2,7 @@ import 'package:demo_restful_api/presentation/views/student_detail_screen.dart';
 import 'package:demo_restful_api/presentation/views/student_form_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-
-import '../viewmodels/student_notifier.dart';
+import '../viewmodels/student_view_model.dart';
 
 class StudentListScreen extends ConsumerWidget {
   const StudentListScreen({super.key});
@@ -11,7 +10,6 @@ class StudentListScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final studentState = ref.watch(studentListProvider);
-
     return Scaffold(
       appBar: AppBar(
         title: const Text(
@@ -20,12 +18,6 @@ class StudentListScreen extends ConsumerWidget {
         ),
         centerTitle: true,
         backgroundColor: Colors.indigo,
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.refresh, color: Colors.white),
-            onPressed: () => ref.read(studentListProvider.notifier).refresh(),
-          ),
-        ],
       ),
       body: studentState.when(
         data: (students) {
@@ -37,7 +29,6 @@ class StudentListScreen extends ConsumerWidget {
               ),
             );
           }
-
           return RefreshIndicator(
             onRefresh: () async =>
                 ref.read(studentListProvider.notifier).refresh(),
@@ -62,6 +53,13 @@ class StudentListScreen extends ConsumerWidget {
                       borderRadius: BorderRadius.circular(12),
                     ),
                     child: ListTile(
+                      leading: CircleAvatar(
+                        backgroundColor: Colors.blue,
+                        child: Text(
+                          student.id,
+                          style: TextStyle(color: Colors.white),
+                        ),
+                      ),
                       title: Text(
                         student.fullName,
                         style: const TextStyle(
@@ -72,7 +70,7 @@ class StudentListScreen extends ConsumerWidget {
                       subtitle: Padding(
                         padding: const EdgeInsets.only(top: 4),
                         child: Text(
-                          '${student.age} years old\nAddress: ${student.address.toUpperCase()}',
+                          '${student.age} years old\nAddress: ${student.address.toUpperCase()}\nMajor: ${student.major}',
                           style: const TextStyle(fontSize: 14),
                         ),
                       ),
@@ -147,8 +145,8 @@ class StudentListScreen extends ConsumerWidget {
             MaterialPageRoute(builder: (_) => const StudentFormScreen()),
           );
         },
-        icon: const Icon(Icons.add, color: Colors.white,),
-        label: const Text('Add Student', style: TextStyle(color: Colors.white),),
+        icon: const Icon(Icons.add, color: Colors.white),
+        label: const Text('Add Student', style: TextStyle(color: Colors.white)),
       ),
     );
   }

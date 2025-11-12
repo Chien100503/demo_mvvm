@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../domain/entities/student.dart';
-import '../viewmodels/student_notifier.dart';
+import '../viewmodels/student_view_model.dart';
 
 class StudentFormScreen extends ConsumerStatefulWidget {
   final Student? student;

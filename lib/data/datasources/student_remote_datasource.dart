@@ -4,7 +4,6 @@ import 'package:demo_restful_api/data/services/student_api_service.dart';
 class StudentRemoteDatasource {
   final StudentApiService apiService;
   StudentRemoteDatasource(this.apiService);
-
   Future<List<StudentModel>> getAll() async {
     return await apiService.fetchStudents();
   }
@@ -23,5 +22,14 @@ class StudentRemoteDatasource {
 
   Future<void> delete(String id) async {
     return await apiService.deleteStudent(id);
+  }
+}
+abstract class Abc {
+  void abc();
+}
+class CDE extends Abc {
+  @override
+  void abc() {
+    // TODO: implement abc
   }
 }

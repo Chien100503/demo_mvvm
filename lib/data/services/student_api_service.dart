@@ -6,6 +6,7 @@ import '../../core/network/network_exceptions.dart';
 
 class StudentApiService {
   final ApiService apiService;
+
   StudentApiService(this.apiService);
 
   Future<StudentModel> fetchStudentById(String id) async {
@@ -21,11 +22,11 @@ class StudentApiService {
     try {
       final response = await apiService.dio.get('/students');
       final data = response.data as List<dynamic>;
-      return data.map((json) => StudentModel.fromJson(json as Map<String, dynamic>)).toList();
+      return data
+          .map((json) => StudentModel.fromJson(json as Map<String, dynamic>))
+          .toList();
     } on DioException catch (e) {
-      print(e.message);
       throw NetworkException('Failed to fetch students: ${e.message}');
-
     }
   }
 
@@ -33,7 +34,8 @@ class StudentApiService {
     try {
       final data = Map<String, dynamic>.from(student.toJson());
       // If id is empty (new resource), don't send it to the API
-      if (data['id'] == null || (data['id'] is String && (data['id'] as String).isEmpty)) {
+      if (data['id'] == null ||
+          (data['id'] is String && (data['id'] as String).isEmpty)) {
         data.remove('id');
       }
       final response = await apiService.dio.post('/students', data: data);
@@ -48,10 +50,19 @@ class StudentApiService {
       if (student.id.isEmpty) {
         throw NetworkException('Cannot update student: missing id');
       }
+
+      /// vì sao lai dùng Map<String, dynamic>.from(student.toJson()) thay vì student.toJson() trực tiếp
+      /// để tạo một bản sao mới của bản đồ JSON được trả về bởi phương thức toJson() của đối tượng student.
+      /// Điều này rất quan trọng vì chúng ta cần sửa đổi bản đồ này (bằng cách loại bỏ trường 'id') trước khi
+      /// gửi nó trong yêu cầu PUT. Nếu chúng ta sử dụng trực tiếp student.toJson(),
+      /// chúng ta sẽ sửa đổi bản đồ gốc được trả về bởi toJson(), điều này có thể dẫn đến các hành vi
+      /// không mong muốn nếu bản đồ đó được sử dụng ở nơi khác trong mã của chúng ta.
       final data = Map<String, dynamic>.from(student.toJson());
-      // For update, id is sent in path; remove from body to avoid conflicts
       data.remove('id');
-      final response = await apiService.dio.put('/students/${student.id}', data: data);
+      final response = await apiService.dio.put(
+        '/students/${student.id}',
+        data: data,
+      );
       return StudentModel.fromJson(response.data as Map<String, dynamic>);
     } on DioException catch (e) {
       throw NetworkException('Failed to update student: ${e.message}');
